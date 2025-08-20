@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-image: ;
+            background-color: #f5f5f5;
         }
 
         .container {
@@ -51,40 +51,41 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transition: all 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-stack {
+            display: flex;
+            position: relative;
+            gap: 10px;
+        }
+
+        .image-item {
+            width: 200px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
         .main-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: relative;
-            z-index: 2;
+            z-index: 3;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .prev-image {
-            width: 70%;
-            height: 70%;
-            object-fit: cover;
-            position: absolute;
-            top: 15%;
-            left: 5%;
-            z-index: 1;
-            opacity: 0.6;
-            filter: blur(2px);
+            z-index: 2;
+            opacity: 0.7;
             transform: scale(0.9);
         }
 
         .next-image {
-            width: 70%;
-            height: 70%;
-            object-fit: cover;
-            position: absolute;
-            top: 15%;
-            right: 5%;
-            z-index: 1;
-            opacity: 0.6;
-            filter: blur(2px);
+            z-index: 2;
+            opacity: 0.7;
             transform: scale(0.9);
         }
 
@@ -135,12 +136,13 @@
                 height: 250px;
             }
             
-            .prev-image, .next-image {
-                width: 60%;
-                height: 60%;
-                top: 20%;
-                left: 10%;
-                right: 10%;
+            .image-item {
+                width: 120px;
+                height: 180px;
+            }
+            
+            .main-image {
+                transform: scale(1.05);
             }
         }
     </style>
@@ -156,9 +158,11 @@
         <div class="gallery-container">
             <div class="image-container">
                 <div class="image-wrapper">
-                    <img id="main-image" class="main-image" src="" alt="Основное изображение">
-                    <img id="prev-image" class="prev-image" src="" alt="Предыдущее изображение">
-                    <img id="next-image" class="next-image" src="" alt="Следующее изображение">
+                    <div class="image-stack">
+                        <img id="prev-image" class="image-item prev-image" src="https://placehold.co/800x300?text=Изображение+4" alt="Предыдущее изображение">
+                        <img id="main-image" class="image-item main-image" src="https://placehold.co/800x300?text=Изображение+1" alt="Основное изображение">
+                        <img id="next-image" class="image-item next-image" src="https://placehold.co/800x300?text=Изображение+2" alt="Следующее изображение">
+                    </div>
                 </div>
             </div>
             
@@ -202,8 +206,6 @@
             
             // Обновляем счетчик
             document.getElementById('current-number').textContent = currentIndex + 1;
-
-            document.getElementById('body').background-image: images[currentIndex];
         }
 
         function changeImage(direction) {
