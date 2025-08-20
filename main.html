@@ -36,19 +36,56 @@
         }
 
         .image-container {
+            position: relative;
             width: 100%;
-            height: 400px;
+            height: 300px;
             overflow: hidden;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            background-color: #ddd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 0 auto;
         }
 
-        .image-container img {
+        .image-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease;
+        }
+
+        .main-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .prev-image {
+            width: 70%;
+            height: 70%;
+            object-fit: cover;
+            position: absolute;
+            top: 15%;
+            left: 5%;
+            z-index: 1;
+            opacity: 0.6;
+            filter: blur(2px);
+            transform: scale(0.9);
+        }
+
+        .next-image {
+            width: 70%;
+            height: 70%;
+            object-fit: cover;
+            position: absolute;
+            top: 15%;
+            right: 5%;
+            z-index: 1;
+            opacity: 0.6;
+            filter: blur(2px);
+            transform: scale(0.9);
         }
 
         .arrow {
@@ -57,14 +94,15 @@
             transform: translateY(-50%);
             width: 50px;
             height: 50px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .arrow:hover {
@@ -90,6 +128,21 @@
             font-size: 16px;
             color: #666;
         }
+
+        /* Для адаптивности */
+        @media (max-width: 768px) {
+            .image-container {
+                height: 250px;
+            }
+            
+            .prev-image, .next-image {
+                width: 60%;
+                height: 60%;
+                top: 20%;
+                left: 10%;
+                right: 10%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -102,7 +155,11 @@
         <!-- Витрина изображений -->
         <div class="gallery-container">
             <div class="image-container">
-                <img id="main-image" src="https://placehold.co/800x400?text=Изображение+1" alt="Основное изображение">
+                <div class="image-wrapper">
+                    <img id="main-image" class="main-image" src="https://placehold.co/800x300?text=Изображение+1" alt="Основное изображение">
+                    <img id="prev-image" class="prev-image" src="https://placehold.co/800x300?text=Изображение+4" alt="Предыдущее изображение">
+                    <img id="next-image" class="next-image" src="https://placehold.co/800x300?text=Изображение+2" alt="Следующее изображение">
+                </div>
             </div>
             
             <!-- Стрелки навигации -->
@@ -123,13 +180,29 @@
     <script>
         // Массив с URL изображений (замените на свои)
         const images = [
-            "https://placehold.co/800x400?text=Изображение+1",
-            "https://placehold.co/800x400?text=Изображение+2",
-            "https://placehold.co/800x400?text=Изображение+3",
-            "https://placehold.co/800x400?text=Изображение+4"
+            "https://placehold.co/800x300?text=Изображение+1",
+            "https://placehold.co/800x300?text=Изображение+2",
+            "https://placehold.co/800x300?text=Изображение+3",
+            "https://placehold.co/800x300?text=Изображение+4"
         ];
 
         let currentIndex = 0;
+
+        function updateGallery() {
+            // Обновляем основное изображение
+            document.getElementById('main-image').src = images[currentIndex];
+            
+            // Обновляем предыдущее изображение
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
+            document.getElementById('prev-image').src = images[prevIndex];
+            
+            // Обновляем следующее изображение
+            const nextIndex = (currentIndex + 1) % images.length;
+            document.getElementById('next-image').src = images[nextIndex];
+            
+            // Обновляем счетчик
+            document.getElementById('current-number').textContent = currentIndex + 1;
+        }
 
         function changeImage(direction) {
             // Обновляем индекс
@@ -142,12 +215,13 @@
                 currentIndex = 0;
             }
             
-            // Обновляем изображение
-            document.getElementById('main-image').src = images[currentIndex];
-            
-            // Обновляем счетчик
-            document.getElementById('current-number').textContent = currentIndex + 1;
+            // Обновляем галерею
+            updateGallery();
         }
+
+        // Инициализация
+        document.getElementById('total-number').textContent = images.length;
+        updateGallery();
 
         // Добавляем обработку клавиш
         document.addEventListener('keydown', function(event) {
